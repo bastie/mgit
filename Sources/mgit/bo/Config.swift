@@ -10,7 +10,7 @@ import Foundation
 
 // HACK: found no useable small active ini file project
 
-struct Config {
+public struct Config {
     
     var sections : [Section] = []
     
@@ -24,16 +24,27 @@ struct Config {
         }
     }
     
+    
 }
 
+extension Config : CustomStringConvertible {
+    public var description: String {
+        var desc = "; mgit config"
+        for section in sections {
+            desc.append("\(section.header)\n")
+            for (key,value) in section.value {
+                desc.append("\(key)=\(value)\n")
+            }
+            desc.append("\n")
+        }
+        return desc
+    }
+}
 
 extension Config {
     
-    func createDefaultConfig (to : String) -> Config {
+    public static func createDefaultConfig () -> Config {
         var result = Config ()
-        guard (to == "git") else {
-            return result
-        }
         var core : Config.Section = .init(name: "core")
         core.value ["repositoryformatversion"] = "0"
         core.value ["filemode"] = "false"

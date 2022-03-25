@@ -9,8 +9,10 @@ import Foundation
 import KnightLife
 
 public class Repository {
-
     
+    init (){}
+
+    var config : Config?
     
     public static func getInstance (forPath path: String) -> Repository? {
         var result = Repository()
@@ -24,6 +26,23 @@ public class Repository {
                 }
                 else {
                     print ("create new repository")
+                    try? FileManager.default.createDirectory(atPath: dotGitDir+"/objects", withIntermediateDirectories: true)
+                    try? FileManager.default.createDirectory(atPath: dotGitDir+"/refs/tags", withIntermediateDirectories: true)
+                    try? FileManager.default.createDirectory(atPath: dotGitDir+"/refs/heads", withIntermediateDirectories: true)
+
+                    var filePath = dotGitDir+"/description"
+                    try? "Unnamed repository; edit this file 'description' to name the repository."
+                        .write(to: URL(fileURLWithPath: filePath), atomically: true, encoding: String.Encoding.utf8)
+                    filePath = dotGitDir+"/HEAD"
+                    try? "ref: refs/heads/main\n"
+                        .write(to: URL(fileURLWithPath: filePath), atomically: true, encoding: String.Encoding.utf8)
+                    
+                    result.config = Config.createDefaultConfig()
+                    filePath = dotGitDir+"/config"
+                    try? result.config!.description
+                        .write(to: URL(fileURLWithPath: filePath), atomically: true, encoding: String.Encoding.utf8)
+
+                    print ("Initialized empty Git repository in \(dotGitDir)")
                 }
             }
             else {
@@ -33,7 +52,12 @@ public class Repository {
         }
         else {
             print ("OK you want I create your directory...")
-            
+            try? FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true)
+            guard let created = getInstance(forPath: path) else {
+                try? FileManager.default.removeItem(atPath: path)
+                return nil
+            }
+            return created
         }
         
         return result
