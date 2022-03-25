@@ -1,2 +1,5 @@
-# mgit
-㎎it
+# ㎎it
+
+# License
+
+MIT
