@@ -14,8 +14,6 @@ public struct Config {
     
     var sections : [Section] = []
     
-    
-    
     struct Section {
         var header = String()
         var value : [String:String] = [:]

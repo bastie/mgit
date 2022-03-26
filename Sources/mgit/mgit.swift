@@ -7,32 +7,18 @@
 
 import Foundation
 import ArgumentParser
+import libmgit
 
 
 @main
 struct mgit : ParsableCommand{
     
-//    @Option(name: [.customLong("clone")])
     @Flag(name: [.customShort("v"), .customLong("verbose", withSingleDash: true)], help: "print some informations")
     var logInfo : Bool = false
     
     @Flag(name: [.customShort("V"), .customLong("verbose", withSingleDash: false)], help: "print more informations")
     var logDeveloper : Bool = false
     
-    /*
-    @Argument
-    var clone : String
-    @Argument
-    var add : String
-    @Argument
-    var checkout : String
-    @Argument
-    var commit : String
-    @Argument
-    var `init` : String
-    @Argument
-    var rm : String
-*/
     @Argument (help: "clone,add,checkout,commit,init,rm")
     var command : String
      
@@ -40,6 +26,7 @@ struct mgit : ParsableCommand{
     var files : [String]
 
     func run() throws {
+        
         if logInfo {
             print("\(CommandLine.arguments[0].split(separator: "/")[CommandLine.arguments[0].split(separator: "/").count-1]) started")
         }

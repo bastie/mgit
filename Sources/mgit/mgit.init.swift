@@ -6,11 +6,12 @@
 //
 
 import Foundation
+import libmgit
 
 extension mgit {
     
     public func initRepository (param : [String]) {
-        if let repo = Repository.getInstance(forPath: param[0]){
+        if let repo = Repository.cmdInit(forPath: param[0]){
             print("Repository object created")
         }
         else {

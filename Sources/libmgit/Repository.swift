@@ -12,9 +12,11 @@ public class Repository {
     
     init (){}
 
+    var rootPath : String?
     var config : Config?
     
-    public static func getInstance (forPath path: String) -> Repository? {
+    // MARK: mgit init command
+    public static func cmdInit (forPath path: String) -> Repository? {
         var result = Repository()
         
         if IOFacade.exists(atPath: path) {
@@ -43,6 +45,8 @@ public class Repository {
                         .write(to: URL(fileURLWithPath: filePath), atomically: true, encoding: String.Encoding.utf8)
 
                     print ("Initialized empty Git repository in \(dotGitDir)")
+                    
+                    result.rootPath = path
                 }
             }
             else {
@@ -53,7 +57,7 @@ public class Repository {
         else {
             print ("OK you want I create your directory...")
             try? FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true)
-            guard let created = getInstance(forPath: path) else {
+            guard let created = cmdInit(forPath: path) else {
                 try? FileManager.default.removeItem(atPath: path)
                 return nil
             }
@@ -62,4 +66,5 @@ public class Repository {
         
         return result
     }
+    
 }
